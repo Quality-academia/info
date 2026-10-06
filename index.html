@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0F3D2E">
+<link rel="icon" href="logo.png">
 <title>Academia — Horários e avisos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,16 +23,16 @@
 }
 *{box-sizing:border-box}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
+html{scroll-behavior:smooth;scroll-padding-top:calc(84px + env(safe-area-inset-top,0px))}
 body{margin:0;background:var(--sage);color:var(--ink);font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:var(--disp);margin:0}
 a{color:var(--leaf)}
 :focus-visible{outline:3px solid var(--sprout);outline-offset:3px;border-radius:6px}
 .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(237,243,234,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.top .wrap{display:flex;justify-content:space-between;align-items:center;height:68px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;border-bottom:1px solid var(--moss);background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;height:76px}
 .logo{display:flex;align-items:center;gap:10px;font:800 21px var(--disp);letter-spacing:-.01em;color:var(--pine)}
-.logo::before{content:"";width:26px;height:26px;border-radius:50% 50% 50% 8px;background:var(--leaf);box-shadow:inset -7px -7px 0 var(--sprout)}
+.logo img{height:50px;width:auto;display:block}
 nav{display:flex;gap:2px;background:var(--card);padding:4px;border-radius:99px;border:1px solid var(--moss)}
 nav a{color:var(--ink);text-decoration:none;font-weight:600;font-size:15px;padding:7px 14px;border-radius:99px;transition:background .2s}
 nav a:hover{background:var(--sage);color:var(--pine)}
@@ -108,18 +109,18 @@ footer{margin:84px 14px 14px;padding:36px 0;background:var(--pine);color:#C9DDCF
   .hero{padding:48px 0 40px;margin:4px 8px 0;border-radius:28px}
   .today{transform:none}
   nav a{padding:7px 10px;font-size:14px}
-  .logo{font-size:18px}
+  .logo img{height:40px}
   section{padding-top:64px}
   footer{margin:64px 8px 8px}
 }
-.logo{min-width:0}.logo span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48vw}
+.logo{min-width:0}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.today h2::before{animation:none}*{transition:none!important}}
 </style>
 </head>
 <body>
 
 <header class="top"><div class="wrap">
-  <div class="logo" id="gymName">Sua Academia</div>
+  <a class="logo" href="#" aria-label="Início"><img id="logoImg" src="logo.png" alt="Quality Academia"></a>
   <nav aria-label="Seções"><a href="#horarios">Horários</a><a href="#avisos">Avisos</a><a href="#contato">Contato</a></nav>
 </div></header>
 
@@ -166,7 +167,7 @@ footer{margin:84px 14px 14px;padding:36px 0;background:var(--pine);color:#C9DDCF
 
 <script>
 const CONFIG = {
-  nome: "Sua Academia",
+  nome: "Quality Academia",
   endereco: "Rua Exemplo, 123 — Magé, RJ",
   telefone: "(21) 90000-0000",
   horariosCsv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSDdxQY4MstTdvIzuHOszhOFO6HvaMS788AJ4yorCOzkxzkia-Tqv-q8Z11yJqKiqIngsaK6b3L_929/pub?gid=0&single=true&output=csv",
@@ -252,7 +253,7 @@ function videoEmbed(u){
 
 (async function init(){
   document.title=CONFIG.nome+" — Horários e avisos";
-  $("gymName").innerHTML=`<span>${esc(CONFIG.nome)}</span>`;
+  $("logoImg").alt=CONFIG.nome;
   $("footInfo").innerHTML=`<b>${esc(CONFIG.nome)}</b><span>${esc(CONFIG.endereco)}</span><span>${esc(CONFIG.telefone)}</span>`;
   $("links").innerHTML=CONFIG.links.map(l=>`<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.texto)}</a>`).join("");
   const emb=CONFIG.videoUrl&&videoEmbed(CONFIG.videoUrl);
