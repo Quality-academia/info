@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F3D2E">
+<title>Academia — Horários e avisos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'TT Norms';font-weight:400;font-style:normal;font-display:swap;src:local('TT Norms Regular'),local('TTNorms-Regular'),url('fonts/TTNorms-Regular.woff2') format('woff2')}
+@font-face{font-family:'TT Norms';font-weight:500;font-style:normal;font-display:swap;src:local('TT Norms Medium'),local('TTNorms-Medium'),url('fonts/TTNorms-Medium.woff2') format('woff2')}
+@font-face{font-family:'TT Norms';font-weight:700;font-style:normal;font-display:swap;src:local('TT Norms Bold'),local('TTNorms-Bold'),url('fonts/TTNorms-Bold.woff2') format('woff2')}
+@font-face{font-family:'TT Norms';font-weight:800;font-style:normal;font-display:swap;src:local('TT Norms ExtraBold'),local('TTNorms-ExtraBold'),url('fonts/TTNorms-ExtraBold.woff2') format('woff2')}
+@font-face{font-family:'TT Norms';font-weight:900;font-style:normal;font-display:swap;src:local('TT Norms Black'),local('TTNorms-Black'),url('fonts/TTNorms-Black.woff2') format('woff2')}
+:root{
+  --pine:#0F3D2E;--leaf:#1E7A4F;--sprout:#3FB47A;--lime:#D4EE7A;--sage:#EDF3EA;--moss:#DCE8D6;
+  --ink:#122A20;--mute:#4F6558;--card:#FFFFFF;--warn:#B4532A;--warnbg:#FBE9DF;
+  --disp:'TT Norms','Plus Jakarta Sans',system-ui,sans-serif;
+  --body:'TT Norms','Plus Jakarta Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--sage);color:var(--ink);font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--disp);margin:0}
+a{color:var(--leaf)}
+:focus-visible{outline:3px solid var(--sprout);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(237,243,234,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font:800 21px var(--disp);letter-spacing:-.01em;color:var(--pine)}
+.logo::before{content:"";width:26px;height:26px;border-radius:50% 50% 50% 8px;background:var(--leaf);box-shadow:inset -7px -7px 0 var(--sprout)}
+nav{display:flex;gap:2px;background:var(--card);padding:4px;border-radius:99px;border:1px solid var(--moss)}
+nav a{color:var(--ink);text-decoration:none;font-weight:600;font-size:15px;padding:7px 14px;border-radius:99px;transition:background .2s}
+nav a:hover{background:var(--sage);color:var(--pine)}
+.hero{position:relative;overflow:hidden;color:#F3F8EE;margin:6px 14px 0;border-radius:36px;padding:72px 0 64px;background:var(--pine)}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.hero::before{width:620px;height:620px;right:-180px;top:-260px;border:70px solid var(--leaf);opacity:.55}
+.hero::after{width:260px;height:260px;left:-90px;bottom:-130px;background:var(--sprout);opacity:.35}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center}
+.hero h1{font-size:clamp(46px,8.4vw,98px);font-weight:900;line-height:.92;letter-spacing:-.035em}
+.hero h1 span{display:block;color:var(--lime)}
+.hero p{margin:22px 0 0;max-width:38ch;font-size:18px;color:#C9DDCF}
+.today{background:#F7FBF3;color:var(--ink);border-radius:26px;padding:22px 24px 10px;box-shadow:0 30px 60px -30px rgba(0,0,0,.55);transform:rotate(1.2deg)}
+.today h2{font-size:22px;font-weight:800;display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:2px dashed var(--moss)}
+.today h2::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--sprout);box-shadow:0 0 0 0 rgba(63,180,122,.6);animation:pulse 2.2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(63,180,122,0)}100%{box-shadow:0 0 0 0 rgba(63,180,122,0)}}
+.today .row{background:none;box-shadow:none;border:0;border-radius:0;padding:12px 0;flex-direction:row;align-items:baseline;gap:14px;border-bottom:1px solid var(--moss)}
+.today .row:last-child{border-bottom:0}
+.today .row .t{font-size:22px;min-width:66px;color:var(--leaf)}
+.today .tag{position:static;margin-left:auto;align-self:center}
+.today .empty{padding:14px 0}
+section{padding:84px 0 0}
+section h2.sec{font-size:clamp(34px,5.4vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--pine);margin-bottom:28px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;margin-bottom:20px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{position:relative;font:600 15px var(--body);padding:10px 18px;border:1.5px solid var(--moss);background:var(--card);border-radius:99px;cursor:pointer;white-space:nowrap;color:var(--ink);transition:background .2s,color .2s,border-color .2s}
+.tabs button:hover{border-color:var(--sprout)}
+.tabs button.is-today::after{content:"";position:absolute;top:6px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--sprout)}
+.tabs button[aria-pressed=true]{background:var(--pine);color:#fff;border-color:var(--pine)}
+.tabs button[aria-pressed=true].is-today::after{background:var(--lime)}
+#schedule{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.row{position:relative;display:flex;flex-direction:column;gap:4px;background:var(--card);border-radius:22px 22px 22px 6px;padding:20px 22px;border:1px solid var(--moss)}
+#schedule .row{border-left:6px solid var(--sprout)}
+.row .t{font:800 34px var(--disp);letter-spacing:-.02em;color:var(--pine);line-height:1.1}
+.row .n{display:block;font-weight:700;font-size:18px}
+.row .p{display:block;color:var(--mute);font-size:14px}
+.tag{position:absolute;top:18px;right:18px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:#FFF4C9;color:#7A5A00}
+.row.off{opacity:.75}
+#schedule .row.off{border-left-color:var(--warn)}
+.row.off .tag{background:var(--warnbg);color:var(--warn)}
+.row.off .n{text-decoration:line-through;color:var(--mute)}
+.empty{color:var(--mute);padding:10px 0;margin:0}
+.avisos{display:grid;grid-template-columns:1.2fr 1fr;gap:22px;align-items:start}
+.video{position:relative;aspect-ratio:16/9;background:var(--pine);border-radius:26px;overflow:hidden}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-cap{margin:10px 6px 0;color:var(--mute);font-size:14px}
+.notice{position:relative;background:var(--card);padding:20px 22px 18px 26px;margin-bottom:12px;border-radius:20px;border:1px solid var(--moss);overflow:hidden}
+.notice::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:4px;border-radius:0 4px 4px 0;background:var(--sprout)}
+.notice strong{display:block;font:800 19px var(--disp);color:var(--pine);margin-bottom:4px}
+.notice small{color:var(--mute)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.links a{background:var(--leaf);color:#fff;padding:11px 20px;border-radius:99px;text-decoration:none;font-weight:600;transition:background .2s}
+.links a:hover{background:var(--pine)}
+.links a:first-child{background:var(--lime);color:var(--pine)}
+.links a:first-child:hover{background:#C3E25A}
+.contact{display:grid;grid-template-columns:.85fr 1.15fr;gap:32px;align-items:start}
+.contact p{color:var(--mute);margin:0 0 8px;max-width:34ch;font-size:17px}
+form{position:relative;background:var(--card);padding:28px;border-radius:30px;display:grid;gap:16px;border:1px solid var(--moss);box-shadow:0 24px 50px -34px rgba(15,61,46,.55)}
+label{font-weight:600;font-size:14px;display:grid;gap:6px;color:var(--pine)}
+input,textarea{font:inherit;color:var(--ink);padding:13px 15px;border:1.5px solid var(--moss);border-radius:14px;width:100%;background:#F8FBF6;transition:border-color .2s,background .2s}
+input:focus,textarea:focus{outline:none;border-color:var(--sprout);background:#fff;box-shadow:0 0 0 4px rgba(63,180,122,.18)}
+textarea{min-height:130px;resize:vertical}
+.hp{position:absolute;left:-9999px}
+.send{font:800 16px var(--disp);background:var(--pine);color:#fff;border:0;padding:15px 28px;border-radius:99px;cursor:pointer;justify-self:start;transition:background .2s,transform .15s}
+.send:hover{background:var(--leaf)}
+.send:active{transform:scale(.97)}
+.send:disabled{opacity:.6;cursor:wait}
+#msg{margin:0;font-weight:600;font-size:14px;color:var(--leaf);min-height:1.4em}
+footer{margin:84px 14px 14px;padding:36px 0;background:var(--pine);color:#C9DDCF;border-radius:30px;font-size:15px}
+#footInfo{display:flex;flex-wrap:wrap;gap:6px 28px}
+#footInfo b{color:#fff;font:800 18px var(--disp);width:100%}
+@media(max-width:820px){
+  .hero .wrap,.avisos,.contact{grid-template-columns:1fr}
+  .hero{padding:48px 0 40px;margin:4px 8px 0;border-radius:28px}
+  .today{transform:none}
+  nav a{padding:7px 10px;font-size:14px}
+  .logo{font-size:18px}
+  section{padding-top:64px}
+  footer{margin:64px 8px 8px}
+}
+.logo{min-width:0}.logo span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48vw}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.today h2::before{animation:none}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <div class="logo" id="gymName">Sua Academia</div>
+  <nav aria-label="Seções"><a href="#horarios">Horários</a><a href="#avisos">Avisos</a><a href="#contato">Contato</a></nav>
+</div></header>
+
+<div class="hero"><div class="wrap">
+  <div>
+    <h1>Seu treino <span>começa aqui.</span></h1>
+    <p>Aulas do dia, avisos da recepção e um canal direto com a equipe.</p>
+  </div>
+  <div class="today"><h2 id="todayTitle">Hoje</h2><div id="todayList"></div></div>
+</div></div>
+
+<section id="avisos"><div class="wrap">
+  <h2 class="sec">Avisos</h2>
+  <div class="avisos">
+    <div id="videoBox" hidden>
+      <div class="video"><iframe id="videoFrame" title="Vídeo de aviso" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+      <p class="video-cap">Vídeo de aviso da recepção</p>
+    </div>
+    <div><div id="notices"></div><div class="links" id="links"></div></div>
+  </div>
+</div></section>
+
+<section id="horarios"><div class="wrap">
+  <h2 class="sec">Quadro de horários</h2>
+  <div class="tabs" id="tabs" role="group" aria-label="Dia da semana"></div>
+  <div id="schedule"></div>
+</div></section>
+
+<section id="contato"><div class="wrap">
+  <div class="contact">
+    <div><h2 class="sec">Fale com a gente</h2><p>Dúvidas sobre planos, aulas ou matrícula? Deixe sua mensagem e respondemos pelo contato informado.</p></div>
+    <form id="form">
+      <label>Nome<input name="nome" required maxlength="80" autocomplete="name"></label>
+      <label>WhatsApp ou e-mail<input name="contato" required maxlength="100"></label>
+      <label>Mensagem<textarea name="mensagem" required maxlength="1000"></textarea></label>
+      <input class="hp" name="site" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="send" id="sendBtn" type="submit">Enviar mensagem</button>
+      <p id="msg" role="status"></p>
+    </form>
+  </div>
+</div></section>
+
+<footer><div class="wrap" id="footInfo"></div></footer>
+
+<script>
+const CONFIG = {
+  nome: "Sua Academia",
+  endereco: "Rua Exemplo, 123 — Magé, RJ",
+  telefone: "(21) 90000-0000",
+  horariosCsv: "",
+  avisosCsv: "",
+  videoUrl: "",
+  formUrl: "",
+  links: [
+    {texto: "WhatsApp da recepção", url: "https://wa.me/5521900000000"},
+    {texto: "Instagram", url: "https://instagram.com/"}
+  ]
+};
+
+const DIAS = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+const hoje = new Date().getDay();
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const DEMO_HORARIOS = [
+  ["Segunda","06:00","Funcional","Carlos",""],["Segunda","18:30","Spinning","Aline",""],["Segunda","19:30","Jiu-jitsu","Rafael",""],
+  ["Terça","07:00","Pilates","Marina",""],["Terça","19:00","Boxe","Rafael","Remarcada"],
+  ["Quarta","06:00","Funcional","Carlos",""],["Quarta","18:30","Spinning","Aline","Cancelada"],
+  ["Quinta","07:00","Pilates","Marina",""],["Quinta","19:00","Boxe","Rafael",""],
+  ["Sexta","06:00","Funcional","Carlos",""],["Sexta","18:00","Alongamento","Marina",""],
+  ["Sábado","09:00","Aulão de ritmos","Aline",""]
+];
+const DEMO_AVISOS = [["","Bem-vindo ao portal","Estes são avisos de exemplo. Edite a planilha para trocar."]];
+
+function parseCsv(t){
+  const rows=[];let r=[],c="",q=false;
+  for(let i=0;i<t.length;i++){const ch=t[i];
+    if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}
+    else if(ch=='"')q=true;
+    else if(ch==','){r.push(c);c=""}
+    else if(ch=='\n'){r.push(c);rows.push(r);r=[];c=""}
+    else if(ch!='\r')c+=ch}
+  if(c||r.length){r.push(c);rows.push(r)}
+  return rows.slice(1).filter(x=>x.some(v=>v.trim()));
+}
+async function load(url, demo){
+  if(!url) return demo;
+  try{const res=await fetch(url);if(!res.ok)throw 0;return parseCsv(await res.text())}
+  catch(e){return demo}
+}
+
+function hm(s){const m=String(s).match(/(\d{1,2})\s*[:h.]\s*(\d{2})/);return m?[+m[1]*60+ +m[2],m[1].padStart(2,"0")+":"+m[2]]:[9999,String(s)]}
+function norm(s){return s.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+function dayIndex(name){return DIAS.findIndex(d=>norm(d)===norm(name.replace(/-feira/i,"")))}
+
+function rowHtml(r){
+  const [,hora,aula,prof,status]=r, st=(status||"").trim();
+  return `<div class="row ${norm(st)==='cancelada'?'off':''}">
+    <span class="t">${esc(hm(hora)[1])}</span>
+    <span><span class="n">${esc(aula)}</span><span class="p">${prof?'com '+esc(prof):''}</span></span>
+    ${st?`<span class="tag">${esc(st)}</span>`:''}</div>`;
+}
+
+function render(horarios){
+  const byDay=d=>horarios.filter(r=>dayIndex(r[0])===d).sort((a,b)=>hm(a[1])[0]-hm(b[1])[0]);
+  const t=byDay(hoje);
+  $("todayTitle").textContent="Hoje, "+DIAS[hoje].toLowerCase()+(hoje===0||hoje===6?"":"-feira");
+  $("todayList").innerHTML=t.length?t.map(rowHtml).join(""):'<p class="empty">Sem aulas coletivas hoje. A musculação segue no horário normal.</p>';
+
+  const order=[1,2,3,4,5,6,0];
+  const tabs=$("tabs");
+  tabs.innerHTML=order.map(d=>`<button type="button" data-d="${d}" class="${d===hoje?'is-today':''}" aria-pressed="${d===hoje}">${DIAS[d]}</button>`).join("");
+  const show=d=>{
+    tabs.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.d===d));
+    const l=byDay(d);
+    $("schedule").innerHTML=l.length?l.map(rowHtml).join(""):'<p class="empty">Sem aulas coletivas neste dia.</p>';
+  };
+  tabs.onclick=e=>{const b=e.target.closest("button");if(b)show(+b.dataset.d)};
+  show(hoje);
+}
+
+function renderNotices(av){
+  $("notices").innerHTML=av.map(([d,t,x])=>`<div class="notice"><strong>${esc(t)}</strong>${esc(x)}${d?` <small>(${esc(d)})</small>`:""}</div>`).join("");
+}
+
+function videoEmbed(u){
+  const m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);
+  return m?`https://www.youtube-nocookie.com/embed/${m[1]}`:"";
+}
+
+(async function init(){
+  document.title=CONFIG.nome+" — Horários e avisos";
+  $("gymName").innerHTML=`<span>${esc(CONFIG.nome)}</span>`;
+  $("footInfo").innerHTML=`<b>${esc(CONFIG.nome)}</b><span>${esc(CONFIG.endereco)}</span><span>${esc(CONFIG.telefone)}</span>`;
+  $("links").innerHTML=CONFIG.links.map(l=>`<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.texto)}</a>`).join("");
+  const emb=CONFIG.videoUrl&&videoEmbed(CONFIG.videoUrl);
+  if(emb){$("videoFrame").src=emb;$("videoBox").hidden=false}else document.querySelector(".avisos").style.gridTemplateColumns="1fr";
+  const [h,a]=await Promise.all([load(CONFIG.horariosCsv,DEMO_HORARIOS),load(CONFIG.avisosCsv,DEMO_AVISOS)]);
+  render(h);renderNotices(a);
+})();
+
+$("form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const f=e.target,msg=$("msg"),btn=$("sendBtn");
+  if(f.site.value)return;
+  if(!CONFIG.formUrl){msg.textContent="Formulário ainda não conectado. Preencha CONFIG.formUrl.";return}
+  btn.disabled=true;msg.textContent="Enviando…";
+  try{
+    const res=await fetch(CONFIG.formUrl,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({nome:f.nome.value,contato:f.contato.value,mensagem:f.mensagem.value})});
+    const j=await res.json();
+    if(!j.ok)throw 0;
+    msg.textContent="Mensagem enviada. Respondemos em breve.";f.reset();
+  }catch(err){msg.textContent="Não conseguimos confirmar o envio. Se preferir, fale pelo WhatsApp."}
+  btn.disabled=false;
+});
+</script>
+</body>
+</html>
