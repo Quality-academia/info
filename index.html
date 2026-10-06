@@ -52,7 +52,12 @@ nav a:hover{background:var(--sage);color:var(--pine)}
 .today .row:last-child{border-bottom:0}
 .today .row .t{font-size:22px;min-width:66px;color:var(--leaf)}
 .today .tag{position:static;margin-left:auto;align-self:center}
-.today .empty{padding:14px 0}
+.today .block{margin-bottom:48px}
+.block h3{font:800 clamp(26px,3.6vw,34px) var(--disp);color:var(--pine);margin-bottom:14px;letter-spacing:-.02em}
+.units{display:flex;gap:6px;margin:12px 0 4px}
+.units button{font:600 14px var(--body);padding:7px 14px;border-radius:99px;border:1.5px solid var(--moss);background:#fff;color:var(--ink);cursor:pointer}
+.units button[aria-pressed=true]{background:var(--pine);color:#fff;border-color:var(--pine)}
+.empty{padding:14px 0}
 section{padding:84px 0 0}
 section h2.sec{font-size:clamp(34px,5.4vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--pine);margin-bottom:28px}
 .tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;margin-bottom:20px;scrollbar-width:none}
@@ -62,16 +67,16 @@ section h2.sec{font-size:clamp(34px,5.4vw,56px);font-weight:900;letter-spacing:-
 .tabs button.is-today::after{content:"";position:absolute;top:6px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--sprout)}
 .tabs button[aria-pressed=true]{background:var(--pine);color:#fff;border-color:var(--pine)}
 .tabs button[aria-pressed=true].is-today::after{background:var(--lime)}
-#schedule{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.sched{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
 .row{position:relative;display:flex;flex-direction:column;gap:4px;background:var(--card);border-radius:22px 22px 22px 6px;padding:20px 22px;border:1px solid var(--moss)}
-#schedule .row{border-left:6px solid var(--sprout)}
+.sched .row{border-left:6px solid var(--sprout)}
 .row .t{font:800 34px var(--disp);letter-spacing:-.02em;color:var(--pine);line-height:1.1}
 .row .t small{font:600 14px var(--body);color:var(--mute);margin-left:6px;letter-spacing:0}
 .row .n{display:block;font-weight:700;font-size:18px}
 .row .p{display:block;color:var(--mute);font-size:14px}
 .tag{position:absolute;top:18px;right:18px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:#FFF4C9;color:#7A5A00}
 .row.off{opacity:.75}
-#schedule .row.off{border-left-color:var(--warn)}
+.sched .row.off{border-left-color:var(--warn)}
 .row.off .tag{background:var(--warnbg);color:var(--warn)}
 .row.off .n{text-decoration:line-through;color:var(--mute)}
 .empty{color:var(--mute);padding:10px 0;margin:0}
@@ -129,7 +134,7 @@ footer{margin:84px 14px 14px;padding:36px 0;background:var(--pine);color:#C9DDCF
     <h1>Seu treino <span>começa aqui.</span></h1>
     <p>Aulas do dia, avisos da recepção e um canal direto com a equipe.</p>
   </div>
-  <div class="today"><h2 id="todayTitle">Hoje</h2><div id="todayList"></div></div>
+  <div class="today"><h2 id="todayTitle">Hoje</h2><div class="units" id="todayUnits" role="group" aria-label="Unidade"></div><div id="todayList"></div></div>
 </div></div>
 
 <section id="avisos"><div class="wrap">
@@ -145,8 +150,7 @@ footer{margin:84px 14px 14px;padding:36px 0;background:var(--pine);color:#C9DDCF
 
 <section id="horarios"><div class="wrap">
   <h2 class="sec">Quadro de horários</h2>
-  <div class="tabs" id="tabs" role="group" aria-label="Dia da semana"></div>
-  <div id="schedule"></div>
+  <div id="blocks"></div>
 </div></section>
 
 <section id="contato"><div class="wrap">
@@ -170,7 +174,11 @@ const CONFIG = {
   nome: "Quality Academia",
   endereco: "Rua Exemplo, 123 — Magé, RJ",
   telefone: "(21) 90000-0000",
-  horariosCsv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSDdxQY4MstTdvIzuHOszhOFO6HvaMS788AJ4yorCOzkxzkia-Tqv-q8Z11yJqKiqIngsaK6b3L_929/pub?gid=0&single=true&output=csv",
+  // Uma linha por unidade. "csv" = link da aba publicada em CSV (deixe "" se ainda não tiver).
+  unidades: [
+    {nome: "Quality Centro", csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSDdxQY4MstTdvIzuHOszhOFO6HvaMS788AJ4yorCOzkxzkia-Tqv-q8Z11yJqKiqIngsaK6b3L_929/pub?gid=0&single=true&output=csv"},
+    {nome: "Quality Corrêas", csv: ""}
+  ],
   avisosCsv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSDdxQY4MstTdvIzuHOszhOFO6HvaMS788AJ4yorCOzkxzkia-Tqv-q8Z11yJqKiqIngsaK6b3L_929/pub?gid=1313861634&single=true&output=csv",
   videoUrl: "",
   formUrl: "",
@@ -224,22 +232,36 @@ function rowHtml(r){
     ${st?`<span class="tag">${esc(st)}</span>`:''}</div>`;
 }
 
-function render(horarios){
-  const byDay=d=>horarios.filter(r=>dayIndex(r[0])===d).sort((a,b)=>hm(a[1])[0]-hm(b[1])[0]);
-  const t=byDay(hoje);
+function render(units){
+  const byDay=(rows,d)=>rows.filter(r=>dayIndex(r[0])===d).sort((a,b)=>hm(a[1])[0]-hm(b[1])[0]);
+  const list=(rows,d,msg)=>{
+    if(!rows)return '<p class="empty">Horários em breve.</p>';
+    const l=byDay(rows,d);
+    return l.length?l.map(rowHtml).join(""):`<p class="empty">${msg}</p>`;
+  };
   $("todayTitle").textContent="Hoje, "+DIAS[hoje].toLowerCase()+(hoje===0||hoje===6?"":"-feira");
-  $("todayList").innerHTML=t.length?t.map(rowHtml).join(""):'<p class="empty">Sem aulas coletivas hoje. A musculação segue no horário normal.</p>';
+  const ub=$("todayUnits");
+  ub.innerHTML=units.map((u,i)=>`<button type="button" data-i="${i}" aria-pressed="${i===0}">${esc(u.nome.replace(/^Quality\s+/i,""))}</button>`).join("");
+  const showToday=i=>{
+    ub.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.i===i));
+    $("todayList").innerHTML=list(units[i].rows,hoje,"Sem aulas coletivas hoje.");
+  };
+  ub.onclick=e=>{const b=e.target.closest("button");if(b)showToday(+b.dataset.i)};
+  showToday(0);
 
   const order=[1,2,3,4,5,6,0];
-  const tabs=$("tabs");
-  tabs.innerHTML=order.map(d=>`<button type="button" data-d="${d}" class="${d===hoje?'is-today':''}" aria-pressed="${d===hoje}">${DIAS[d]}</button>`).join("");
-  const show=d=>{
-    tabs.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.d===d));
-    const l=byDay(d);
-    $("schedule").innerHTML=l.length?l.map(rowHtml).join(""):'<p class="empty">Sem aulas coletivas neste dia.</p>';
-  };
-  tabs.onclick=e=>{const b=e.target.closest("button");if(b)show(+b.dataset.d)};
-  show(hoje);
+  $("blocks").innerHTML=units.map((u,i)=>`<div class="block"><h3>${esc(u.nome)}</h3>
+    <div class="tabs" data-u="${i}" role="group" aria-label="Dia da semana, ${esc(u.nome)}">${order.map(d=>`<button type="button" data-d="${d}" class="${d===hoje?'is-today':''}" aria-pressed="${d===hoje}">${DIAS[d]}</button>`).join("")}</div>
+    <div class="sched" id="sched${i}"></div></div>`).join("");
+  units.forEach((u,i)=>{
+    const tabs=document.querySelector(`.tabs[data-u="${i}"]`);
+    const show=d=>{
+      tabs.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.d===d));
+      $("sched"+i).innerHTML=list(u.rows,d,"Sem aulas coletivas neste dia.");
+    };
+    tabs.onclick=e=>{const b=e.target.closest("button");if(b)show(+b.dataset.d)};
+    show(hoje);
+  });
 }
 
 function renderNotices(av){
@@ -258,8 +280,8 @@ function videoEmbed(u){
   $("links").innerHTML=CONFIG.links.map(l=>`<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.texto)}</a>`).join("");
   const emb=CONFIG.videoUrl&&videoEmbed(CONFIG.videoUrl);
   if(emb){$("videoFrame").src=emb;$("videoBox").hidden=false}else document.querySelector(".avisos").style.gridTemplateColumns="1fr";
-  const [h,a]=await Promise.all([load(CONFIG.horariosCsv,DEMO_HORARIOS),load(CONFIG.avisosCsv,DEMO_AVISOS)]);
-  render(h);renderNotices(a);
+  const [a,...rows]=await Promise.all([load(CONFIG.avisosCsv,DEMO_AVISOS),...CONFIG.unidades.map(u=>u.csv?load(u.csv,[]):null)]);
+  render(CONFIG.unidades.map((u,i)=>({nome:u.nome,rows:rows[i]})));renderNotices(a);
 })();
 
 $("form").addEventListener("submit",async e=>{
