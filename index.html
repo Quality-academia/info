@@ -92,8 +92,8 @@ section h2.sec{font-size:clamp(34px,5.4vw,56px);font-weight:900;letter-spacing:-
 .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
 .links a{background:var(--leaf);color:#fff;padding:11px 20px;border-radius:99px;text-decoration:none;font-weight:600;transition:background .2s}
 .links a:hover{background:var(--pine)}
-.links a:first-child{background:var(--lime);color:var(--pine)}
-.links a:first-child:hover{background:#C3E25A}
+.links a:nth-child(-n+2){background:var(--lime);color:var(--pine)}
+.links a:nth-child(-n+2):hover{background:#C3E25A}
 .contact{display:grid;grid-template-columns:.85fr 1.15fr;gap:32px;align-items:start}
 .contact p{color:var(--mute);margin:0 0 8px;max-width:34ch;font-size:17px}
 form{position:relative;background:var(--card);padding:28px;border-radius:30px;display:grid;gap:16px;border:1px solid var(--moss);box-shadow:0 24px 50px -34px rgba(15,61,46,.55)}
@@ -184,8 +184,10 @@ const CONFIG = {
   videoUrl: "",
   formUrl: "https://script.google.com/macros/s/AKfycbyxUEj9FKaABnwIX-WwXoG6Pvruk9OuDua_7cradewQ5FZRjJLnSQIHvotc9c1AqqdQ/exec",
   links: [
-    {texto: "WhatsApp da recepção", url: "https://wa.me/5521900000000"},
-    {texto: "Instagram", url: "https://instagram.com/"}
+    {texto: "WhatsApp Centro", url: "https://wa.me/552422460858"},
+    {texto: "WhatsApp Corrêas", url: "https://wa.me/552422210958"},
+    {texto: "Instagram Centro", url: "https://www.instagram.com/academiaqualitycentro/"},
+    {texto: "Instagram Corrêas", url: "https://www.instagram.com/academiaqualitycorreas/"}
   ]
 };
 
