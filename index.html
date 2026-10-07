@@ -40,6 +40,9 @@ nav a:hover{background:var(--sage);color:var(--pine)}
 .hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
 .hero::before{width:620px;height:620px;right:-180px;top:-260px;border:70px solid var(--leaf);opacity:.55}
 .hero::after{width:260px;height:260px;left:-90px;bottom:-130px;background:var(--sprout);opacity:.35}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero-shade{position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(15,61,46,.93) 0%,rgba(15,61,46,.76) 55%,rgba(15,61,46,.55) 100%)}
+.hero.has-media::before,.hero.has-media::after{display:none}
 .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center}
 .hero h1{font-size:clamp(46px,8.4vw,98px);font-weight:900;line-height:.92;letter-spacing:-.035em}
 .hero h1 span{display:block;color:var(--lime)}
@@ -120,7 +123,7 @@ footer{margin:84px 14px 14px;padding:36px 0;background:var(--pine);color:#C9DDCF
   footer{margin:64px 8px 8px}
 }
 .logo{min-width:0}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.today h2::before{animation:none}*{transition:none!important}}
+@media(prefers-reduced-motion:reduce){.hero-video{display:none}.hero.has-media{background:url(hero.jpg) center/cover,var(--pine)}html{scroll-behavior:auto}.today h2::before{animation:none}*{transition:none!important}}
 </style>
 </head>
 <body>
@@ -130,7 +133,10 @@ footer{margin:84px 14px 14px;padding:36px 0;background:var(--pine);color:#C9DDCF
   <nav aria-label="Seções"><a href="#horarios">Horários</a><a href="#avisos">Avisos</a><a href="#contato">Contato</a></nav>
 </div></header>
 
-<div class="hero"><div class="wrap">
+<div class="hero has-media">
+<video class="hero-video" src="hero.mp4" poster="hero.jpg" autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"></video>
+<div class="hero-shade"></div>
+<div class="wrap">
   <div>
     <h1>Seu treino <span>começa aqui.</span></h1>
     <p>Aulas do dia, avisos da recepção e um canal direto com a equipe.</p>
