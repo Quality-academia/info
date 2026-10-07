@@ -101,8 +101,8 @@ section h2.sec{font-size:clamp(34px,5.4vw,56px);font-weight:900;letter-spacing:-
 .contact p{color:var(--mute);margin:0 0 8px;max-width:34ch;font-size:17px}
 form{position:relative;background:var(--card);padding:28px;border-radius:30px;display:grid;gap:16px;border:1px solid var(--moss);box-shadow:0 24px 50px -34px rgba(15,61,46,.55)}
 label{font-weight:600;font-size:14px;display:grid;gap:6px;color:var(--pine)}
-input,textarea{font:inherit;color:var(--ink);padding:13px 15px;border:1.5px solid var(--moss);border-radius:14px;width:100%;background:#F8FBF6;transition:border-color .2s,background .2s}
-input:focus,textarea:focus{outline:none;border-color:var(--sprout);background:#fff;box-shadow:0 0 0 4px rgba(63,180,122,.18)}
+input,textarea,select{font:inherit;color:var(--ink);padding:13px 15px;border:1.5px solid var(--moss);border-radius:14px;width:100%;background:#F8FBF6;transition:border-color .2s,background .2s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--sprout);background:#fff;box-shadow:0 0 0 4px rgba(63,180,122,.18)}
 textarea{min-height:130px;resize:vertical}
 .hp{position:absolute;left:-9999px}
 .send{font:800 16px var(--disp);background:var(--pine);color:#fff;border:0;padding:15px 28px;border-radius:99px;cursor:pointer;justify-self:start;transition:background .2s,transform .15s}
@@ -130,7 +130,7 @@ footer{margin:84px 14px 14px;padding:36px 0;background:var(--pine);color:#C9DDCF
 
 <header class="top"><div class="wrap">
   <a class="logo" href="#" aria-label="Início"><img id="logoImg" src="logo.png" alt="Quality Academia"></a>
-  <nav aria-label="Seções"><a href="#horarios">Horários</a><a href="#avisos">Avisos</a><a href="#contato">Contato</a></nav>
+  <nav aria-label="Seções"><a href="#horarios">Horários</a><a href="#avisos">Avisos</a><a href="#contato">Sua opinião</a></nav>
 </div></header>
 
 <div class="hero has-media">
@@ -162,13 +162,17 @@ footer{margin:84px 14px 14px;padding:36px 0;background:var(--pine);color:#C9DDCF
 
 <section id="contato"><div class="wrap">
   <div class="contact">
-    <div><h2 class="sec">Fale com a gente</h2><p>Dúvidas sobre planos, aulas ou matrícula? Deixe sua mensagem e respondemos pelo contato informado.</p></div>
+    <div><h2 class="sec">Sua opinião</h2><p>Elogio, sugestão ou reclamação: conte para a gente. Se quiser uma resposta, deixe um contato; se preferir, pode enviar sem se identificar.</p></div>
     <form id="form">
-      <label>Nome<input name="nome" required maxlength="80" autocomplete="name"></label>
-      <label>WhatsApp ou e-mail<input name="contato" required maxlength="100"></label>
+      <label>Unidade<select name="unidade" id="selUnidade" required></select></label>
+      <label>Tipo de mensagem<select name="tipo" required>
+        <option value="Elogio">Elogio</option><option value="Sugestão">Sugestão</option>
+        <option value="Reclamação">Reclamação</option><option value="Dúvida">Dúvida</option></select></label>
+      <label>Nome (opcional)<input name="nome" maxlength="80" autocomplete="name"></label>
+      <label>WhatsApp ou e-mail (opcional, se quiser resposta)<input name="contato" maxlength="100"></label>
       <label>Mensagem<textarea name="mensagem" required maxlength="1000"></textarea></label>
       <input class="hp" name="site" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <button class="send" id="sendBtn" type="submit">Enviar mensagem</button>
+      <button class="send" id="sendBtn" type="submit">Enviar</button>
       <p id="msg" role="status"></p>
     </form>
   </div>
@@ -283,6 +287,7 @@ function videoEmbed(u){
 }
 
 (async function init(){
+  $("selUnidade").innerHTML=CONFIG.unidades.map(u=>`<option>${esc(u.nome)}</option>`).join("")+"<option>Geral</option>";
   document.title=CONFIG.nome+" — Horários e avisos";
   $("logoImg").alt=CONFIG.nome;
   $("footInfo").innerHTML=`<b>${esc(CONFIG.nome)}</b><span>${esc(CONFIG.endereco)}</span><span>${esc(CONFIG.telefone)}</span>`;
@@ -301,10 +306,10 @@ $("form").addEventListener("submit",async e=>{
   btn.disabled=true;msg.textContent="Enviando…";
   try{
     const res=await fetch(CONFIG.formUrl,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify({nome:f.nome.value,contato:f.contato.value,mensagem:f.mensagem.value})});
+      body:JSON.stringify({unidade:f.unidade.value,tipo:f.tipo.value,nome:f.nome.value,contato:f.contato.value,mensagem:f.mensagem.value})});
     const j=await res.json();
     if(!j.ok)throw 0;
-    msg.textContent="Mensagem enviada. Respondemos em breve.";f.reset();
+    msg.textContent="Mensagem recebida. Obrigado por contar para a gente!";f.reset();
   }catch(err){msg.textContent="Não conseguimos confirmar o envio. Se preferir, fale pelo WhatsApp."}
   btn.disabled=false;
 });
